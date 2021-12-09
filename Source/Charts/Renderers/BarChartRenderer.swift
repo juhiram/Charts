@@ -337,7 +337,20 @@ open class BarChartRenderer: BarLineScatterCandleBubbleRenderer
                 _barShadowRectBuffer.size.height = viewPortHandler.contentHeight
                 
                 context.setFillColor(dataSet.barShadowColor.cgColor)
-                context.fill(_barShadowRectBuffer)
+                //context.fill(_barShadowRectBuffer)
+                
+                //JUHI
+                
+                let cornerRadius = dataProvider.barCornerRadius
+                if cornerRadius != 0 {
+                    let clipPath = UIBezierPath(roundedRect: _barShadowRectBuffer, cornerRadius: cornerRadius).cgPath
+
+                    context.addPath(clipPath)
+                    context.fillPath()
+                } else {
+                    context.fill(_barShadowRectBuffer)
+                }
+                ///
             }
         }
 
@@ -352,10 +365,20 @@ open class BarChartRenderer: BarLineScatterCandleBubbleRenderer
 
                 context.setFillColor(dataSet.barShadowColor.cgColor)
                 //context.fill(barRect)
-                let bezierPath = UIBezierPath(roundedRect: barRect, cornerRadius: 5)
-                               context.addPath(bezierPath.cgPath)
+//                let bezierPath = UIBezierPath(roundedRect: barRect, cornerRadius: 5)
+//                               context.addPath(bezierPath.cgPath)
+//
+//                               context.drawPath(using: .fill)
+            
+                let cornerRadius = dataProvider.barCornerRadius
+                if cornerRadius != 0 {
+                    let clipPath = UIBezierPath(roundedRect: barRect, cornerRadius: cornerRadius).cgPath
 
-                               context.drawPath(using: .fill)
+                    context.addPath(clipPath)
+                    context.fillPath()
+                } else {
+                    context.fill(barRect)
+                }
             }
         }
         
@@ -383,11 +406,11 @@ open class BarChartRenderer: BarLineScatterCandleBubbleRenderer
                 context.setFillColor(dataSet.color(atIndex: j).cgColor)
             }
             
-            //context.fill(barRect)
-            let bezierPath = UIBezierPath(roundedRect: barRect, cornerRadius: 5)
-                           context.addPath(bezierPath.cgPath)
-
-                           context.drawPath(using: .fill)
+            //context.fill(barRect)//JUHI
+//            let bezierPath = UIBezierPath(roundedRect: barRect, cornerRadius: 5)
+//                           context.addPath(bezierPath.cgPath)
+//
+//                           context.drawPath(using: .fill)
             
             if drawBorder
             {
@@ -395,6 +418,29 @@ open class BarChartRenderer: BarLineScatterCandleBubbleRenderer
                 context.setLineWidth(borderWidth)
                 context.stroke(barRect)
             }
+
+             let cornerRadius = dataProvider.barCornerRadius
+             if cornerRadius != 0
+             {
+                 let barClipPath = UIBezierPath(roundedRect: barRect, cornerRadius: cornerRadius).cgPath
+                 context.addPath(barClipPath)
+                 if drawBorder && borderWidth < barRect.height   //do not draw a border if it bigger that content
+                 {
+                     context.drawPath(using: .fillStroke)
+                 }
+                 else
+                 {
+                     context.fillPath()
+                 }
+             }
+             else
+             {
+                 context.fill(barRect)
+                 if drawBorder
+                 {
+                     context.stroke(barRect)
+                 }
+             }
 
             // Create and append the corresponding accessibility element to accessibilityOrderedElements
             if let chart = dataProvider as? BarChartView
@@ -752,11 +798,22 @@ open class BarChartRenderer: BarLineScatterCandleBubbleRenderer
                 
                 setHighlightDrawPos(highlight: high, barRect: barRect)
                 
-                //context.fill(barRect)
-                let bezierPath = UIBezierPath(roundedRect: barRect, cornerRadius: 5)
-                               context.addPath(bezierPath.cgPath)
-
-                               context.drawPath(using: .fill)
+                //context.fill(barRect) //JUHI
+//                let bezierPath = UIBezierPath(roundedRect: barRect, cornerRadius: 5)
+//                               context.addPath(bezierPath.cgPath)
+//
+//                               context.drawPath(using: .fill)
+                let cornerRadius = dataProvider.barCornerRadius
+                                 if cornerRadius != 0
+                                 {
+                                     let clipPath = UIBezierPath(roundedRect: barRect, cornerRadius: cornerRadius).cgPath
+                                     context.addPath(clipPath)
+                                     context.fillPath()
+                                 }
+                                 else
+                                 {
+                                     context.fill(barRect)
+                                 }
             }
         }
     }

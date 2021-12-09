@@ -17,7 +17,10 @@ open class BarChartView: BarLineChartViewBase, BarChartDataProvider
 {
     /// if set to true, all values are drawn above their bars, instead of below their top
     private var _drawValueAboveBarEnabled = true
-
+    
+    //juhi
+    private var _barCornerRadius: CGFloat = 0.0
+    
     /// if set to true, a grey area is drawn behind each bar that indicates the maximum value
     private var _drawBarShadowEnabled = false
     
@@ -174,6 +177,16 @@ open class BarChartView: BarLineChartViewBase, BarChartDataProvider
     /// `true` the highlight is be full-bar oriented, `false` ifsingle-value
     open var isHighlightFullBarEnabled: Bool { return highlightFullBarEnabled }
     
+    //juhi
+    @objc open var barCornerRadius: CGFloat
+        {
+        get { return _barCornerRadius }
+        set
+        {
+            _barCornerRadius = newValue
+            setNeedsDisplay()
+        }
+    }
     // MARK: - BarChartDataProvider
     
     open var barData: BarChartData? { return data as? BarChartData }
